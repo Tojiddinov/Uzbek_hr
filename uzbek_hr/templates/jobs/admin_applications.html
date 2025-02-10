@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8">
+    <h2 class="text-3xl font-semibold text-gray-900 mb-6">Job Applications</h2>
+
+    {% if applications %}
+        <div class="bg-white shadow-lg rounded-lg p-6">
+            <table class="min-w-full border border-gray-300">
+                <thead>
+                    <tr class="bg-gray-200">
+                        <th class="border px-4 py-2">Job Title</th>
+                        <th class="border px-4 py-2">Applicant</th>
+                        <th class="border px-4 py-2">Email</th>
+                        <th class="border px-4 py-2">Resume</th>
+                        <th class="border px-4 py-2">Status</th>
+                        <th class="border px-4 py-2">Applied Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for application in applications %}
+                        <tr class="border-b">
+                            <td class="border px-4 py-2">{{ application.job.title }}</td>
+                            <td class="border px-4 py-2">{{ application.firs_name }} {{ application.last_name }}</td>
+                            <td class="border px-4 py-2">
+                                <a href="mailto:{{ application.email }}" class="text-blue-500 hover:underline">
+                                    {{ application.email }}
+                                </a>
+                            </td>
+                            <td class="border px-4 py-2">
+                                <a href="{{ application.resume.url }}" target="_blank" class="text-green-600 hover:underline">
+                                    View Resume
+                                </a>
+                            </td>
+                            <td class="border px-4 py-2">{{ application.get_status_display }}</td>
+                            <td class="border px-4 py-2">{{ application.applied_at|date:"Y-m-d H:i" }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% else %}
+        <p class="text-gray-700">No job applications found.</p>
+    {% endif %}
+</div>
+{% endblock %}

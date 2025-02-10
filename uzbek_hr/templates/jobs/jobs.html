@@ -1,0 +1,24 @@
+
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="container mt-5">
+        <h2 class="mb-4 text-center">Available Jobs</h2>
+
+        {% if jobs %}
+            <div class="list-group">
+                {% for job in jobs %}
+                    <a href="{% url 'job_detail' job.id %}" class="list-group-item list-group-item-action">
+                        <h5 class="mb-1">{{ job.title }}</h5>
+                        <p class="mb-1"><strong>{{ job.company }}</strong> - {{ job.location }}</p>
+                        <small class="text-muted">Posted on: {{ job.posted_on }}</small>
+                    </a>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="alert alert-warning text-center mt-3">
+                No jobs available at the moment.
+            </div>
+        {% endif %}
+    </div>
+{% endblock %}

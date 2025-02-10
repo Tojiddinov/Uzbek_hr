@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8">
+    <div class="bg-white shadow-lg rounded-lg p-6 max-w-2xl mx-auto">
+        <h2 class="text-3xl font-semibold text-gray-900">Apply for {{ job.title }}</h2>
+        <p class="text-gray-700 mt-2"><strong>Company:</strong> {{ job.company }}</p>
+        <p class="text-gray-700"><strong>Category:</strong> {{ job.category }}</p>
+        <p class="text-gray-700"><strong>Location:</strong> {{ job.location }}</p>
+        <p class="text-gray-700"><strong>Employment Type:</strong> {{ job.employment_type }}</p>
+        <p class="text-gray-700"><strong>Salary:</strong> ${{ job.salary }}</p>
+        <p class="text-gray-700 mt-4"><strong>Description:</strong> {{ job.description }}</p>
+        <p class="text-gray-700 mt-4"><strong>Requirements:</strong> {{ job.requirements }}</p>
+
+
+        <form method="post" enctype="multipart/form-data" class="mt-6 space-y-4">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="w-full bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition">Submit Application</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

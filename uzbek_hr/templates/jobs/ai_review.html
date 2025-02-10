@@ -1,0 +1,34 @@
+
+
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Resume AI Analysis</h2>
+    <hr>
+
+    <div class="card p-3 mt-3">
+        <h3 class="text-dark">Resume Analysis:</h3>
+        {% if ai_result %}
+            <p class="text-muted">{{ ai_result }}</p>
+        {% else %}
+            <p class="text-danger">No analysis available.</p>
+        {% endif %}
+    </div>
+
+    <div class="card p-3 mt-3">
+        <h3 class="text-dark">Generated Questions for Interview:</h3>
+        {% if questions %}
+            <ol>
+                {% for question in questions %}
+                <li>{{ question }}</li>
+                {% endfor %}
+            </ol>
+        {% else %}
+            <p class="text-danger">Error generating questions. Please try again.</p>
+        {% endif %}
+    </div>
+
+   <a href="{% url 'job_applications_list' %}" class="btn btn-secondary mt-3">Back to Applications</a>
+</div>
+{% endblock %}

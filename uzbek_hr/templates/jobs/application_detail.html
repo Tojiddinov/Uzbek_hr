@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="max-w-2xl mx-auto p-6 bg-white shadow-md rounded-lg">
+    <h2 class="text-2xl font-semibold mb-4">Application Details</h2>
+
+    <div class="border-b pb-4 mb-4">
+        <p><strong>Job Title:</strong> {{ application.job.title }}</p>
+        <p><strong>Applicant Name:</strong> {{ application.user.get_full_name }}</p>
+        <p><strong>Email:</strong> {{ application.user.email }}</p>
+        <p><strong>Status:</strong> 
+            <span class="px-3 py-1 rounded-lg {% if application.status == 'Accepted' %}bg-green-500 text-white{% elif application.status == 'Pending' %}bg-yellow-500 text-white{% else %}bg-red-500 text-white{% endif %}">
+                {{ application.status }}
+            </span>
+        </p>
+    </div>
+
+    {% if application.resume %}
+    <div class="mb-4">
+        <p><strong>Resume:</strong> <a href="{{ application.resume.url }}" class="text-blue-500 hover:underline" target="_blank">Download Resume</a></p>
+    </div>
+    {% endif %}
+
+    {% if application.cover_letter %}
+    <div class="mb-4">
+        <p><strong>Cover Letter:</strong></p>
+        <p class="p-4 bg-gray-100 border rounded-lg">{{ application.cover_letter }}</p>
+    </div>
+    {% endif %}
+
+    {% if user.is_staff or user == application.job.employer %}
+    <div class="mt-6">
+        <h3 class="text-lg font-semibold mb-2">Update Application Status</h3>
+        <form method="POST" action="{% url 'update_application_status' application.id %}">
+            {% csrf_token %}
+            <select name="status" class="border p-2 rounded-lg">
+                <option value="Pending" {% if application.status == 'Pending' %}selected{% endif %}>Pending</option>
+                <option value="Accepted" {% if application.status == 'Accepted' %}selected{% endif %}>Accepted</option>
+                <option value="Rejected" {% if application.status == 'Rejected' %}selected{% endif %}>Rejected</option>
+            </select>
+            <button type="submit" class="ml-2 bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-lg">
+                Update Status
+            </button>
+             <a href="{% url 'dashboard' %}" class="bg-gray-600 hover:bg-gray-700 text-white py-2 px-4 rounded-lg">
+        ⬅ Back to Menu
+             </a>
+        </form>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
