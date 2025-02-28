@@ -41,8 +41,7 @@ def analyze_resume(resume_text, job_title, job_description):
             {resume_text}
             """
 
-        # ✅ Yangi API formatidan foydalanamiz
-        completion = client.chat.completions.create(
+        completion = openai.ChatCompletion.create(
             model="gpt-4o-mini",
             messages=[
                 {"role": "system", "content": "You are an AI HR assistant specializing in resume screening and interview question generation."},
@@ -51,9 +50,8 @@ def analyze_resume(resume_text, job_title, job_description):
             max_tokens=800
         )
 
-        # ✅ Javobni to‘g‘ri ajratish
         if completion.choices:
-            questions = completion.choices[0].message.content.strip().split("\n")
+            questions = completion.choices[0].message['content'].strip().split("\n")
             return [q.strip() for q in questions if q.strip()]
 
         return ["Error: No response from OpenAI."]
@@ -63,6 +61,7 @@ def analyze_resume(resume_text, job_title, job_description):
     
     except Exception as e:
         return [f"Unexpected Error: {str(e)}"]
+
 
 # def send_test_notification_email(user_email, job_title):
 #     """

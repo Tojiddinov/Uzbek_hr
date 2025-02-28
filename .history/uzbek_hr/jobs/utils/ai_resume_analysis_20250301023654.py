@@ -9,40 +9,48 @@ from openai import OpenAIError
 client = openai.OpenAI(api_key=settings.OPENAI_API_KEY)
 
 def analyze_resume(resume_text, job_title, job_description):
-    if not resume_text or not job_description or not job_title:
-        return ["Error: Resume, Job Title, or Job Description is empty."]
+    """
+    Analyzes a resume and generates AI-based interview questions.
+
+    Args:
+        resume_text (str): The candidate's resume content.
+        job_title (str): The title of the job being applied for.
+        job_description (str): The job description.
+
+    Returns:
+        list: A list of interview questions or an error message.
+    """
+    if not resume_text or not job_title or not job_description:
+        return ["Error: Resume, Job Title, or Job Description is missing."]
 
     try:
-        match_score = match_resume_to_job(resume_text, job_title, job_description)  
+        # Match resume to job description and title
+        match_score = match_resume_to_job(resume_text, job_title, job_description)
 
+        # Determine the prompt based on match score
         if match_score < 0.5:
             prompt = f"""
             You are an AI HR assistant. The candidate's resume is not highly relevant to the job.
             Generate **10 general interview questions** to assess their adaptability.
 
-            **Job Title:**
-            {job_title}
+            **Job Title:** {job_title}
 
-            **Job Description:**
-            {job_description}
+            **Job Description:** {job_description}
             """
         else:
             prompt = f"""
             You are an AI HR assistant. Analyze the following **job requirements** and **resume**, 
             and generate **20 resume-specific interview questions** based on both:
 
-            **Job Title:**
-            {job_title}
+            **Job Title:** {job_title}
 
-            **Job Description:**
-            {job_description}
+            **Job Description:** {job_description}
 
-            **Candidate's Resume:**
-            {resume_text}
+            **Candidate's Resume:** {resume_text}
             """
 
-        # ✅ Yangi API formatidan foydalanamiz
-        completion = client.chat.completions.create(
+        # OpenAI API call
+        response = openai.ChatCompletion.create(
             model="gpt-4o-mini",
             messages=[
                 {"role": "system", "content": "You are an AI HR assistant specializing in resume screening and interview question generation."},
@@ -51,18 +59,20 @@ def analyze_resume(resume_text, job_title, job_description):
             max_tokens=800
         )
 
-        # ✅ Javobni to‘g‘ri ajratish
-        if completion.choices:
-            questions = completion.choices[0].message.content.strip().split("\n")
-            return [q.strip() for q in questions if q.strip()]
+        # Extract response content
+        if response and response.choices:
+            ai_content = response.choices[0].message['content'].strip()
+            questions = [q.strip() for q in ai_content.split("\n") if q.strip()]
+            return questions if questions else ["Error: No questions generated."]
 
         return ["Error: No response from OpenAI."]
-    
-    except OpenAIError as e:  # ✅ To‘g‘ri exception handling
+
+    except openai.error.OpenAIError as e:
         return [f"OpenAI API Error: {str(e)}"]
-    
+
     except Exception as e:
         return [f"Unexpected Error: {str(e)}"]
+
 
 # def send_test_notification_email(user_email, job_title):
 #     """
@@ -98,4 +108,4 @@ def send_test_notification_email(email, job_title):
     message = f"Dear Candidate,\n\nYour resume has been reviewed for the position '{job_title}'. " \
               f"Please visit your dashboard to answer AI-generated interview questions.\n\nBest regards,\nUzbek HR Team"
 
-    send_mail(subject, message, 'jurabeksodiqovich@gmail.com', [email])
+    send_mail(subject, message, 'jurabeksodiqovic', [email])
