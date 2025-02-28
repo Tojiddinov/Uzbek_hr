@@ -1,0 +1,6 @@
+{% extends 'base.html' %}
+{% block content %}
+    <h2>Test Expired</h2>
+    <p>Unfortunately, your test deadline has passed. You are no longer able to submit your answers.</p>
+    <a href="{% url 'job_seeker_dashboard' %}" class="btn btn-primary">Back to Dashboard</a>
+{% endblock %}

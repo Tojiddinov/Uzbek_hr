@@ -1,5 +1,3 @@
-
-
 {% extends 'base.html' %}
 
 {% block content %}
@@ -19,9 +17,9 @@
     <div class="card p-3 mt-3">
         <h3 class="text-dark">Generated Questions for Interview:</h3>
         {% if questions %}
-            <ol>
+            <ol class="list-group list-group-numbered">
                 {% for question in questions %}
-                <li>{{ question }}</li>
+                <li class="list-group-item">{{ question }}</li>
                 {% endfor %}
             </ol>
         {% else %}
@@ -29,6 +27,8 @@
         {% endif %}
     </div>
 
-   <a href="{% url 'job_applications_list' %}" class="btn btn-secondary mt-3">Back to Applications</a>
+    <a href="{% url 'job_applications_list' %}" class="btn btn-secondary mt-3">
+        ⬅ Back to Applications
+    </a>
 </div>
 {% endblock %}

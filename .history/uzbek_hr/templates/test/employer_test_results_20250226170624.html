@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Test Results for {{ application.applicant.username }}</h2>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Question</th>
+                <th>Answer</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for qa in question_answers %}
+            <tr>
+                <td>{{ qa.question }}</td>
+                <td>{{ qa.answer }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{% url 'employer_dashboard' %}" class="btn btn-secondary mt-3">Back to Dashboard</a>
+    <a href="{% url 'employer_test_results' application_id %}">View Test Results</a>
+
+</div>
+{% endblock %}

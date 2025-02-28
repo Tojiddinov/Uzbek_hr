@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="container mx-auto p-6">
+    <h2 class="text-3xl font-bold mb-6">Job Seeker Dashboard</h2>
+
+    <!-- Profile Section -->
+    <div class="bg-white p-6 shadow-lg rounded-lg flex items-center gap-6">
+        {% if profile.profile_picture %}
+            <img src="{{ profile.profile_picture.url }}" alt="Profile Picture" class="w-28 h-28 rounded-full shadow-lg border-4 border-blue-500">
+        {% else %}
+            <img src="https://via.placeholder.com/96" alt="Default Profile" class="w-28 h-28 rounded-full shadow-lg border-4 border-gray-300">
+        {% endif %}
+
+        <div>
+            <h3 class="text-2xl font-bold">Welcome, {{ user.username }}!</h3>
+            <p><strong>Name:</strong> {{ user.first_name }} {{ user.last_name }}</p>
+            <p><strong>Email:</strong> {{ user.email }}</p>
+            <p><strong>Age:</strong> {{ profile.age|default:"N/A" }}</p>
+            <p><strong>University:</strong> {{ profile.university_name }}</p>
+
+            <!-- Resume Preview -->
+            {% if profile.resume %}
+    <p><strong>Resume:</strong> <a href="{{ profile.resume.url }}" target="_blank" class="text-blue-600 hover:underline">View Resume</a></p>
+{% else %}
+    <p class="text-gray-500">No resume uploaded.</p>
+{% endif %}
+
+            <!-- LinkedIn Profile -->
+            {% if profile.linkedin %}
+                <p><strong>LinkedIn:</strong> <a href="{{ profile.linkedin }}" class="text-blue-600 hover:underline">View Profile</a></p>
+            {% endif %}
+
+            {% if profile.phone %}
+                <p><strong>Phone Number:</strong> {{ profile.phone }}</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Floating Edit Button -->
+    <a href="{% url 'edit_profile' %}" class="fixed bottom-8 right-8 bg-blue-500 text-white px-5 py-3 rounded-full shadow-lg hover:bg-blue-600 transition">
+        Edit Profile ✏️
+    </a>
+
+    <!-- Job Applications Section -->
+    <div class="bg-white p-6 shadow-md rounded-lg mt-8">
+        <h3 class="text-2xl font-semibold mb-4">Your Job Applications</h3>
+        {% if applications %}
+            <ul class="space-y-4">
+                {% for app in applications %}
+                    <li class="flex justify-between items-center border-b pb-3">
+                        <div>
+                            <strong class="text-lg">{{ app.job.title }}</strong>
+                            <div class="text-sm text-gray-500">Applied on {{ app.applied_date }}</div>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <span class="px-3 py-1 rounded-full text-sm font-semibold
+                                {% if app.status == 'Accepted' %}
+                                    bg-green-100 text-green-700
+                                {% elif app.status == 'Rejected' %}
+                                    bg-red-100 text-red-700
+                                {% else %}
+                                    bg-yellow-100 text-yellow-700
+                                {% endif %}">
+                                {{ app.status }}
+                            </span>
+                        </div>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p class="text-gray-500">You have not applied to any jobs yet.</p>
+            <a href="{% url 'job_list' %}" class="mt-4 px-4 py-2 bg-blue-500 text-white rounded-lg inline-block">Apply for a Job</a>
+        {% endif %}
+    </div>
+
+</div>
+
+{% endblock %}

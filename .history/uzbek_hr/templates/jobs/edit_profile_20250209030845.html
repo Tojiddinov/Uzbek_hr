@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block title %}Edit Profile{% endblock %}
+
+{% block content %}
+<div class="container mx-auto p-6">
+    <h1 class="text-3xl font-bold text-gray-800 mb-4">Edit Your Profile</h1>
+
+    <form method="POST" enctype="multipart/form-data" class="bg-white p-6 rounded-lg shadow-md">
+        {% csrf_token %}
+
+        <label class="block text-gray-700 font-semibold">First Name:</label>
+        <input type="text" name="first_name" value="{{ user.first_name }}" class="border rounded w-full p-2 mb-4">
+
+        <label class="block text-gray-700 font-semibold">Last Name:</label>
+        <input type="text" name="last_name" value="{{ user.last_name }}" class="border rounded w-full p-2 mb-4">
+
+        <label class="block text-gray-700 font-semibold">Age:</label>
+        <input type="number" name="age" value="{{ user.age }}" class="border rounded w-full p-2 mb-4">
+
+        <label class="block text-gray-700 font-semibold">Phone Number:</label>
+        <input type="text" name="phone" value="{{ user.phone }}" class="border rounded w-full p-2 mb-4">
+
+        <label class="block text-gray-700 font-semibold">LinkedIn Profile:</label>
+        <input type="url" name="linkedin" value="{{ user.linkedin }}" class="border rounded w-full p-2 mb-4">
+
+        <label class="block text-gray-700 font-semibold">Upload Resume (PDF):</label>
+        <input type="file" name="resume" class="border rounded w-full p-2 mb-4">
+
+        <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">
+            Save Changes
+        </button>
+    </form>
+
+    <div class="mt-6 bg-white p-6 rounded-lg shadow-md">
+        <h2 class="text-xl font-semibold text-gray-800 mb-4">Change Password</h2>
+        <a href="{% url 'password_change' %}" class="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600">
+            Change Password
+        </a>
+    </div>
+</div>
+{% endblock %}

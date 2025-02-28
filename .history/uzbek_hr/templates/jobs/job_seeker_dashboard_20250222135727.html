@@ -1,0 +1,98 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="container mx-auto p-10">
+    <div class="p-10 text-center">
+        <!-- Profile Image -->
+        <div class="flex flex-col items-center">
+            {% if profile.profile_picture %}
+                <img src="{{ profile.profile_picture.url }}" alt="Profile Picture" class="w-32 h-32 rounded-full shadow-none border-none">
+            {% else %}
+                <img src="https://via.placeholder.com/128" alt="Default Profile" class="w-32 h-32 rounded-full shadow-none border-none">
+            {% endif %}
+
+            <!-- User Info -->
+            <h2 class="text-3xl font-semibold mt-4">{{ user.first_name }} {{ user.last_name }}</h2>
+            <p class="text-gray-500">{{ user.email }}</p>
+        </div>
+    </div>
+
+    <!-- Navigation Tabs -->
+    <div class="mt-8 flex justify-center border-none">
+        <button id="applications-tab" class="px-6 py-3 text-lg font-semibold text-blue-600 border-b-2 border-blue-600 focus:outline-none">MY APPLICATIONS</button>
+        <button id="alerts-tab" class="px-6 py-3 text-lg font-semibold text-gray-500 hover:text-blue-600 focus:outline-none">INFO AND ALERTS</button>
+    </div>
+
+    <!-- My Applications Section -->
+    <div id="applications-section" class="p-6 shadow-none rounded-none mt-4">
+        <h3 class="text-2xl font-semibold mb-4">ACTIVE JOB APPLICATIONS</h3>
+        {% if applications %}
+            <ul class="space-y-4">
+                {% for app in applications %}
+                    <li class="flex justify-between items-center p-4 rounded-none shadow-none border-none bg-white">
+                        <div>
+                            <strong class="text-lg">{{ app.job.title }}</strong>
+                            <p class="text-sm text-gray-500">Remote, {{ app.job.location }}</p>
+                        </div>
+                        <div>
+                            <span class="text-gray-600 text-sm">Applied on {{ app.applied_date }}</span>
+                            <span class="ml-4 px-3 py-1 rounded-full text-sm font-semibold border-none
+                                {% if app.status == 'Accepted' %} bg-green-100 text-green-700
+                                {% elif app.status == 'Rejected' %} bg-red-100 text-red-700
+                                {% else %} bg-yellow-100 text-yellow-700
+                                {% endif %}">
+                                {{ app.status }}
+                            </span>
+                        </div>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p class="text-gray-500">You have not applied to any jobs yet.</p>
+        {% endif %}
+    </div>
+
+    <!-- Floating Edit Profile Button -->
+    
+    </a>
+</div>
+
+ <!-- Info & Alerts Section (Initially Hidden) -->
+<div id="alerts-section" class="bg-white p-6 shadow-md rounded-lg mt-4 hidden">
+    <h3 class="text-2xl font-semibold mb-4">INFO AND ALERTS</h3>
+    <p class="text-gray-500">No alerts at the moment.</p>
+</div>
+{% for application in job_applications %}
+    <h3>{{ application.job.title }} Test Savollari</h3>
+    <ul>
+        {% for question in application.get_questions_list %}
+            <li>{{ question }}</li>
+        {% endfor %}
+    </ul>
+{% endfor %}
+
+
+
+<!-- Floating Edit Profile Button -->
+<a href="{% url 'edit_profile' %}" class="fixed bottom-8 right-8 bg-blue-500 text-white px-5 py-3 rounded-full shadow-lg hover:bg-blue-600 transition">
+Edit Profile ✏️
+</a>
+
+<script>
+    document.getElementById('applications-tab').addEventListener('click', function () {
+        document.getElementById('applications-section').style.display = 'block';
+        document.getElementById('alerts-section').style.display = 'none';  // Hide alerts section
+        document.getElementById('alerts-tab').classList.remove('border-blue-600', 'text-blue-600');
+        this.classList.add('border-blue-600', 'text-blue-600');
+    });
+
+    document.getElementById('alerts-tab').addEventListener('click', function () {
+        document.getElementById('applications-section').style.display = 'none';
+        document.getElementById('alerts-section').style.display = 'block'; // Show alerts section
+        document.getElementById('applications-tab').classList.remove('border-blue-600', 'text-blue-600');
+        this.classList.add('border-blue-600', 'text-blue-600');
+    });
+</script>
+
+
+{% endblock %}

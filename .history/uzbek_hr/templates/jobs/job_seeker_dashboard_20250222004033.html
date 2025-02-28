@@ -1,0 +1,83 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="container mx-auto p-10">
+    <div class="bg-white p-10  rounded-lg text-center">
+        <!-- Profile Image -->
+        <div class="flex flex-col items-center">
+            {% if profile.profile_picture %}
+                <img src="{{ profile.profile_picture.url }}" alt="Profile Picture" class="w-32 h-32 rounded-full shadow-lg border-4 border-gray-300">
+            {% else %}
+                <img src="https://via.placeholder.com/128" alt="Default Profile" class="w-32 h-32 rounded-full shadow-lg border-4 border-gray-300">
+            {% endif %}
+
+            <!-- User Info -->
+            <h2 class="text-3xl font-semibold mt-4">{{ user.first_name }} {{ user.last_name }}</h2>
+            <p class="text-gray-500">{{ user.email }}</p>
+        </div>
+    </div>
+
+    <!-- Navigation Tabs -->
+    <div class="mt-8 flex justify-center ">
+        <button id="applications-tab" class="px-6 py-3 text-lg font-semibold text-blue-600 border-b-2 border-blue-600 focus:outline-none">MY APPLICATIONS</button>
+        <button id="alerts-tab" class="px-6 py-3 text-lg font-semibold text-gray-500 hover:text-blue-600 focus:outline-none">INFO AND ALERTS</button>
+    </div>
+
+    <!-- My Applications Section -->
+    <div id="applications-section" class="bg-white p-6 shadow-md rounded-lg mt-4">
+        <h3 class="text-2xl font-semibold mb-4">ACTIVE JOB APPLICATIONS</h3>
+        {% if applications %}
+            <ul class="space-y-4">
+                {% for app in applications %}
+                    <li class="flex justify-between items-center border p-4 rounded-lg shadow">
+                        <div>
+                            <strong class="text-lg">{{ app.job.title }}</strong>
+                            <p class="text-sm text-gray-500">Remote, {{ app.job.location }}</p>
+                        </div>
+                        <div>
+                            <span class="text-gray-600 text-sm">Applied on {{ app.applied_date }}</span>
+                            <span class="ml-4 px-3 py-1 rounded-full text-sm font-semibold
+                                {% if app.status == 'Accepted' %} bg-green-100 text-green-700
+                                {% elif app.status == 'Rejected' %} bg-red-100 text-red-700
+                                {% else %} bg-yellow-100 text-yellow-700
+                                {% endif %}">
+                                {{ app.status }}
+                            </span>
+                        </div>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p class="text-gray-500">You have not applied to any jobs yet.</p>
+        {% endif %}
+    </div>
+
+    <!-- Info & Alerts Section (Initially Hidden) -->
+    <div id="alerts-section" class="bg-white p-6 shadow-md rounded-lg mt-4 hidden">
+        <h3 class="text-2xl font-semibold mb-4">INFO AND ALERTS</h3>
+        <p class="text-gray-500">No alerts at the moment.</p>
+    </div>
+</div>
+
+<!-- Floating Edit Profile Button -->
+<a href="{% url 'edit_profile' %}" class="fixed bottom-8 right-8 bg-blue-500 text-white px-5 py-3 rounded-full shadow-lg hover:bg-blue-600 transition">
+    Edit Profile ✏️
+</a>
+
+<script>
+    document.getElementById('applications-tab').addEventListener('click', function () {
+        document.getElementById('applications-section').classList.remove('hidden');
+        document.getElementById('alerts-section').classList.add('hidden');
+        this.classList.add('text-blue-600', 'border-blue-600');
+        document.getElementById('alerts-tab').classList.remove('text-blue-600', 'border-blue-600');
+    });
+
+    document.getElementById('alerts-tab').addEventListener('click', function () {
+        document.getElementById('alerts-section').classList.remove('hidden');
+        document.getElementById('applications-section').classList.add('hidden');
+        this.classList.add('text-blue-600', 'border-blue-600');
+        document.getElementById('applications-tab').classList.remove('text-blue-600', 'border-blue-600');
+    });
+</script>
+
+{% endblock %}

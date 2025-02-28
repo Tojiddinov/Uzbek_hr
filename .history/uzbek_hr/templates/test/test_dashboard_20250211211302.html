@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h2>Test Dashboard</h2>
+
+    {% if message %}
+        <p>{{ message }}</p>
+    {% else %}
+        <p><strong>Savol:</strong> {{ question.question_text }}</p>
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="btn btn-primary">Javobni yuborish</button>
+        </form>
+    {% endif %}
+{% endblock %}

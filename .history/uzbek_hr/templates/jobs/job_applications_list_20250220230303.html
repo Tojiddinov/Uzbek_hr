@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="mb-4">Your Job Applications</h2>
+
+    {% if applications %}
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Job Title</th>
+                <th>Applicant Name</th>
+                <th>Email</th>
+                <th>Resume</th>
+                <th>Cover Letter</th>
+                <th>Application Date</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for application in applications %}
+            <tr>
+                <td>{{ application.job.title }}</td>  <!-- Ish nomi -->
+                <td>{{ application.name }} {{ application.lname }}</td>
+                <td>{{ application.email }}</td>
+                <td><a href="{{ application.resume.url }}" target="_blank">View Resume</a></td>
+                <td><a href="{{ application.cover_letter.url }}" target="_blank">View Cover Letter</a></td>
+                <td>{{ application.applied_at }}</td>
+                <td>
+                    <a href="{% url 'ai_resume_review' application.id %}" class="btn btn-primary">Review with AI</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p>No applications found for your job postings.</p>
+    {% endif %}
+
+    <a href="{% url 'employer_dashboard' %}" class="bg-gray-600 hover:bg-gray-700 text-white py-2 px-4 rounded-md">
+        ⬅ Back to Employer Dashboard
+    </a>
+</div>
+{% endblock %}

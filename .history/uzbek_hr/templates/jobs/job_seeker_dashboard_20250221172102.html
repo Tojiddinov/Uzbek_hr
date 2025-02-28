@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="container mx-auto p-6">
+    <h2 class="text-2xl font-semibold mb-4">Job Seeker Dashboard</h2>
+
+    <!-- Profile Section -->
+    <div class="bg-white p-6 shadow-lg rounded-lg flex items-center gap-6">
+        {% if profile.profile_picture %}
+            <img src="{{ profile.profile_picture.url }}" alt="Profile Picture" class="w-24 h-24 rounded-full shadow">
+        {% else %}
+            {% comment %} <img src="https://via.placeholder.com/96" alt="Default Profile" class="w-24 h-24 rounded-full shadow"> {% endcomment %}
+        {% endif %}
+
+        <div>
+            <h3 class="text-xl font-bold">Welcome, {{ user.username }}!</h3>
+            <p><strong>Name:</strong> {{ user.first_name }} {{ user.last_name }}</p>
+            <p><strong>Email:</strong> {{ user.email }}</p>
+            <p><strong>Age:</strong> {{ profile.age|default:"N/A" }}</p>
+            <p><strong>University:</strong> {{ profile.university_name }}</p>
+
+            <!-- Resume Preview -->
+            {% if profile.resume %}
+            <p><strong>Resume:</strong> <a href="{{ profile.resume.url }}" target="_blank" class="text-blue-600 hover:underline">View Resume</a></p>
+{% else %}
+            <p class="text-gray-500">No resume uploaded.</p>
+        {% endif %}
+        
+
+            {% if profile.linkedin %}
+                <p><strong>LinkedIn:</strong> <a href="{{ profile.linkedin }}" class="text-blue-600 hover:underline">{{ profile.linkedin }}</a></p>
+            {% endif %}
+
+            {% if profile.phone %}
+                <p><strong>Phone Number:</strong> {{ profile.phone }}</p>
+            {% endif %}
+
+            <a href="{% url 'edit_profile' %}" class="mt-4 px-4 py-2 bg-blue-500 text-white rounded-lg inline-block">Edit Profile</a>
+        </div>
+    </div>
+
+    <!-- Job Applications Section -->
+    <div class="bg-white p-4 shadow-md rounded-lg mt-6">
+        <h3 class="text-xl font-semibold mb-3">Your Job Applications</h3>
+        {% if applications %}
+            <ul class="list-disc pl-6">
+                {% for app in applications %}
+                    <li class="border-b py-2 flex justify-between items-center">
+                        <strong>{{ app.job.title }}</strong>
+                        <span class="font-semibold {% if app.status == 'Accepted' %}text-green-500{% elif app.status == 'Rejected' %}text-red-500{% else %}text-yellow-500{% endif %}">
+                            {{ app.status }}
+                        </span>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p class="text-gray-500">You have not applied to any jobs yet.</p>
+            <a href="{% url 'job_list' %}" class="mt-4 px-4 py-2 bg-blue-500 text-white rounded-lg inline-block">Apply for a Job</a>
+        {% endif %}
+    </div>
+
+</div>
+
+{% endblock %}
