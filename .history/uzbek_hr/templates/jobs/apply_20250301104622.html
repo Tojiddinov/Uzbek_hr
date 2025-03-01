@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="max-w-2xl mx-auto p-6 bg-white shadow-md rounded-lg">
+    <h2 class="text-2xl font-semibold mb-4">Apply for "{{ job.title }}"</h2>
+
+    <!-- Success & Error Messages -->
+    {% if messages %}
+        {% for message in messages %}
+            <div class="p-3 mb-4 text-center rounded-lg {% if message.tags == 'success' %} bg-green-500 text-white {% elif message.tags == 'error' %} bg-red-500 text-white {% else %} bg-gray-300 {% endif %}">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <!-- Form -->
+    <form method="POST" enctype="multipart/form-data" class="space-y-4">
+        {% csrf_token %}
+
+        <div class="grid gap-4">
+            {% for field in form %}
+                <div>
+                    <label class="block text-gray-700 font-medium">{{ field.label }}</label>
+                    {{ field }}
+                    {% if field.errors %}
+                        <p class="text-red-500 text-sm mt-1">{{ field.errors.0 }}</p>
+                    {% endif %}
+                </div>
+            {% endfor %}
+        </div>
+
+        <a href="{% url 'job_se' %}" class="btn btn-secondary mt-3">GO to Applications list</a>
+    </form>
+</div>
+{% endblock %}
