@@ -11,7 +11,7 @@ from django.http import HttpResponse
 from django.shortcuts import render, get_object_or_404, redirect
 from .forms import JobApplicationForm, ResumeForm, JobForm, JobSeekerProfileForm
 from .models import Job, CustomUser, JobApplication, JobSeekerProfile, TestDashboard, Resume
-from .utils.ai_resume_analysis import analyze_resume, generate_interview_questions
+from .utils.ai_resume_analysis import analyze_resume
 from .utils.resume_analysis import match_resume_to_job
 from .utils.resume_analysis import generate_interview_questions
 # from .utils.ai_resume_analysis import send_interview_questions_email

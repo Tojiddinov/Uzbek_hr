@@ -11,7 +11,7 @@ from django.http import HttpResponse
 from django.shortcuts import render, get_object_or_404, redirect
 from .forms import JobApplicationForm, ResumeForm, JobForm, JobSeekerProfileForm
 from .models import Job, CustomUser, JobApplication, JobSeekerProfile, TestDashboard, Resume
-from .utils.ai_resume_analysis import analyze_resume, generate_interview_questions
+from .utils.ai_resume_analysis import analyze_resume
 from .utils.resume_analysis import match_resume_to_job
 from .utils.resume_analysis import generate_interview_questions
 # from .utils.ai_resume_analysis import send_interview_questions_email
@@ -247,7 +247,7 @@ def apply_for_job(request, job_id):
             # Email jo'natish
             send_mail(
                 subject="Sizning arizangiz qabul qilindi",
-                message=f"Assalomu alaykum, {application.first_name}!\n\n"
+                message=f"Assalomu alaykum, {{application.name}}!\n\n"
                         f"Sizning '{job.title}' lavozimi uchun arizangiz muvaffaqiyatli qabul qilindi.\n"
                         f"Tez orada mutaxassislarimiz siz bilan bog‘lanishadi.\n\nRahmat!",
                 from_email="jurabeksodiqovich@gmail.com",

@@ -63,6 +63,50 @@ def analyze_resume(resume_text, job_title, job_description):
     
     except Exception as e:
         return [f"Unexpected Error: {str(e)}"]
+        
+
+def generate_interview_questions(resume_text, job_title, job_description):
+    prompt = f"""
+    You are an AI HR assistant. Your task is to generate interview questions based on the given job requirements and resume.
+
+    **Job Title:** {job_title}
+    **Job Description:** {job_description}
+    
+    **Candidate's Resume:** 
+    {resume_text}
+    
+    Please generate:
+    - 15 technical interview questions relevant to this position.
+    - 5 general interview questions (psychological/IQ-related).
+    Provide clear, well-structured questions.
+    """
+
+    # Call OpenAI API
+    completion = client.chat.completions.create(
+        model="gpt-4o-mini",
+        messages=[
+            {"role": "system", "content": "You are an AI HR assistant specializing in resume screening and interview question generation."},
+            {"role": "user", "content": prompt}
+        ],
+        max_tokens=800
+    )
+
+    # Extract response text
+    if completion.choices:
+        questions = completion.choices[0].message.content.strip().split("\n")
+        return [q.strip() for q in questions if q.strip()]
+
+    return ["Error: No response from OpenAI."]
+
+# Example Usage
+resume_text = "Experienced Python developer skilled in AI and data analysis."
+job_title = "Machine Learning Engineer"
+job_description = "Seeking an ML Engineer with Python and AI expertise."
+
+questions = generate_interview_questions(resume_text, job_title, job_description)
+
+for q in questions:
+    print(q)
 
 # def send_test_notification_email(user_email, job_title):
 #     """
