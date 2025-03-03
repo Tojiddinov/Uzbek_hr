@@ -1,0 +1,89 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2 class="mb-3 text-center">Employer Dashboard</h2>
+
+    <!-- Create Job Button -->
+    <div class="text-center mb-4">
+        <a href="{% url 'job_create' %}" class="btn btn-primary px-3 py-2" style="border-radius: 5px;">+ Create Job</a>
+    </div>
+
+    <!-- Job Listings Section -->
+    <h3>Your Job Listings</h3>
+    {% if jobs %}
+        <ul class="list-group mb-4">
+            {% for job in jobs %}
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <strong>{{ job.title }}</strong>
+                    <a href="{% url 'delete_job' job.id %}" class="btn btn-danger btn-sm px-3 py-2" style="border-radius: 5px;">Delete</a>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p class="text-muted">No job listings available.</p>
+    {% endif %}
+
+    <!-- Job Applications Table -->
+    <h3>Job Applications</h3>
+    {% if applications %}
+        <div class="table-responsive">
+            <table class="table table-hover table-striped">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Job Title</th>
+                        <th>Applicant</th>
+                        <th>Email</th>
+                        <th>Status</th>
+                        <th>Resume</th>
+                        <th>Cover Letter</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for application in applications %}
+                        <tr>
+                            <td>{{ application.job.title }}</td>
+                            <td>{{ application.name }} {{ application.surname }}</td>
+                            <td>{{ application.email }}</td>
+                            <td>
+                                <span class="badge 
+                                    {% if application.status == 'Pending' %}bg-warning
+                                    {% elif application.status == 'Reviewed' %}bg-info
+                                    {% elif application.status == 'Accepted' %}bg-success
+                                    {% elif application.status == 'Rejected' %}bg-danger
+                                    {% endif %}">
+                                    {{ application.status }}
+                                </span>
+                            </td>
+                            <td><a href="{{ application.resume.url }}" target="_blank" class="btn btn-sm btn-outline-info px-3 py-2" style="border-radius: 5px;">View</a></td>
+                            <td><a href="{{ application.cover_letter.url }}" target="_blank" class="btn btn-sm btn-outline-info px-3 py-2" style="border-radius: 5px;">View</a></td>
+                            <td>
+                                <form method="POST" action="{% url 'update_application_status' application.id %}" class="d-inline">
+                                    {% csrf_token %}
+                                    <select name="status" class="form-select form-select-sm d-inline w-auto">
+                                        <option value="Pending" {% if application.status == "Pending" %}selected{% endif %}>Pending</option>
+                                        <option value="Reviewed" {% if application.status == "Reviewed" %}selected{% endif %}>Reviewed</option>
+                                        <option value="Accepted" {% if application.status == "Accepted" %}selected{% endif %}>Accepted</option>
+                                        <option value="Rejected" {% if application.status == "Rejected" %}selected{% endif %}>Rejected</option>
+                                    </select>
+                                    <button type="submit" class="btn btn-sm btn-success px-3 py-2" style="border-radius: 5px;">Update</button>
+                                </form>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% else %}
+        <p class="text-muted">No job applications yet.</p>
+    {% endif %}
+
+    <!-- Bottom Buttons -->
+    <div class="d-flex justify-content-between mt-4">
+        <a href="{% url 'logout' %}" class="btn btn-danger px-3 py-2" style="border-radius: 5px;">Logout</a>
+        <a href="{% url 'job_applications_list' %}" class="btn btn-secondary px-3 py-2" style="border-radius: 5px;">GO to Applications list</a>
+        <a href="{% url 'shortlist_dashboard' %}" class="btn btn-primary px-2 py-1" style="border-radius: 5px;">Shortlist Dashboard</a>
+    </div>
+</div>
+{% endblock %}

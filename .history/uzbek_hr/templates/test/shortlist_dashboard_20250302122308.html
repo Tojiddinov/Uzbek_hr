@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>Shortlist Qilingan Nomzodlar</h2>
+
+{% for job, applications in jobs.items %}
+    <h3>{{ job }}</h3>
+    <table border="1">
+        <tr>
+            <th>Ism</th>
+            <th>Familiya</th>
+            <th>Email</th>
+            <th>Holati</th>
+        </tr>
+        {% for application in applications %}
+        <tr>
+            <td>{{ application.applicant.first_name }}</td>
+            <td>{{ application.applicant.last_name }}</td>
+            <td>{{ application.applicant.email }}</td>
+            <td>Shortlisted</td>
+        </tr>
+        {% endfor %}
+    </table>
+{% endfor %}
+
+{% endblock %}

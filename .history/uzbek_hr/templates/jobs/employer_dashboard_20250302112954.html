@@ -1,0 +1,86 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2 class="mb-3">Employer Dashboard</h2>
+
+    <!-- Create Job Button -->
+    <a href="{% url 'job_create' %}" class="btn btn-primary mb-4">+ Create Job</a>
+
+    <!-- Job Listings Section -->
+    <h3>Your Job Listings</h3>
+    {% if jobs %}
+        <ul class="list-group mb-4">
+            {% for job in jobs %}
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    {{ job.title }}
+                    <a href="{% url 'delete_job' job.id %}" class="btn btn-danger btn-sm">Delete</a>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No job listings available.</p>
+    {% endif %}
+
+    <!-- Job Applications Table -->
+    <h3>Job Applications</h3>
+    {% if applications %}
+        <div class="table-responsive">
+            <table class="table table-bordered">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Job Title</th>
+                        <th>Applicant</th>
+                        <th>Email</th>
+                        <th>Status</th>
+                        <th>Resume</th>
+                        <th>Cover Letter</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for application in applications %}
+                        <tr>
+                            <td>{{ application.job.title }}</td>
+                            <td>{{ application.name }} {{ application.surname }}</td>
+                            <td>{{ application.email }}</td>
+                            <td>{{ application.status }}</td>
+                            <td><a href="{{ application.resume.url }}" target="_blank" class="btn btn-info btn-sm">View</a></td>
+                            <td><a href="{{ application.cover_letter.url }}" target="_blank" class="btn btn-info btn-sm">View</a></td>
+                            <td>
+                                <form method="POST" action="{% url 'update_application_status' application.id %}" class="d-flex">
+                                    {% csrf_token %}
+                                    <select name="status" class="form-select form-select-sm me-2">
+                                        <option value="Pending" {% if application.status == "Pending" %}selected{% endif %}>Pending</option>
+                                        <option value="Reviewed" {% if application.status == "Reviewed" %}selected{% endif %}>Reviewed</option>
+                                        <option value="Accepted" {% if application.status == "Accepted" %}selected{% endif %}>Accepted</option>
+                                        <option value="Rejected" {% if application.status == "Rejected" %}selected{% endif %}>Rejected</option>
+                                    </select>
+                                    <button type="submit" class="btn btn-success btn-sm">Update</button>
+                                </form>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% else %}
+        <p>No job applications yet.</p>
+    {% endif %}
+
+    <!-- Logout Button -->
+    <a href="{% url 'logout' %}" class="btn btn-danger mt-3">Logout</a>
+    <a href="{% url 'job_applications_list' %}" class="btn btn-secondary mt-3">GO to Applications list</a>
+    {% for application in applications %}
+    {% comment %} <form action="{% url 'shortlist_application' application.id %}" method="post">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-success">Shortlist</button>
+    </form>
+     {% endcomment %}
+    {% endfor %}
+
+    
+    
+
+</div>
+{% endblock %}

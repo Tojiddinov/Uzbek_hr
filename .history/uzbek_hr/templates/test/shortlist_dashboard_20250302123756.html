@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2 class="text-center mb-4">📋 Shortlist Qilingan Nomzodlar</h2>
+
+    {% if jobs %}
+        {% for job, applications in jobs.items %}
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0">{{ job }}</h4>
+                </div>
+                <div class="card-body">
+                    <table class="table table-hover">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>#</th>
+                                <th>👤 Ism</th>
+                                <th>👥 Familiya</th>
+                                <th>📧 Email</th>
+                                <th>✅ Holati</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for application in applications %}
+                            <tr>
+                                <td>{{ forloop.counter }}</td>
+                                <td>{{ application.applicant.first_name }}</td>
+                                <td>{{ application.applicant.last_name }}</td>
+                                <td>
+                                    <a href="mailto:{{ application.applicant.email }}" class="text-decoration-none">
+                                        {{ application.applicant.email }}
+                                    </a>
+                                </td>
+                                <td><span class="badge bg-success">Shortlisted</span></td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        {% endfor %}
+    {% else %}
+        <div class="alert alert-warning text-center">
+            <h5>❌ Shortlist qilingan nomzodlar mavjud emas.</h5>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

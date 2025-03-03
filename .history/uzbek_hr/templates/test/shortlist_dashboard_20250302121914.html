@@ -1,0 +1,18 @@
+
+@login_required
+def shortlist_dashboard(request):
+    if not request.user.is_staff and not request.user.is_employer:
+        return JsonResponse({"error": "Sizga ruxsat yo'q!"}, status=403)
+
+    # Har bir ish uchun shortlist qilingan nomzodlarni guruhlash
+    jobs_with_shortlisted_applicants = {}
+
+    shortlisted_applications = JobApplication.objects.filter(shortlisted=True).select_related("job", "user")
+
+    for application in shortlisted_applications:
+        job_title = application.job.title
+        if job_title not in jobs_with_shortlisted_applicants:
+            jobs_with_shortlisted_applicants[job_title] = []
+        jobs_with_shortlisted_applicants[job_title].append(application)
+
+    return render(request, "shortlist_dashboard.html", {"jobs": jobs_with_shortlisted_applicants})

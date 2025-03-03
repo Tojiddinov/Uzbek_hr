@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>Shortlist Qilingan Nomzodlar</h2>
+<table>
+    <tr>
+        <th></th>
+        <th>Email</th>
+        <th>Kasbi</th>
+        <th>Holati</th>
+    </tr>
+    {% for application in applications %}
+    <tr>
+        <td>{{ application.user.first_name }} {{ application.user.last_name }}</td>
+        <td>{{ application.user.email }}</td>
+        <td>{{ application.job.title }}</td>
+        <td>Shortlisted</td>
+    </tr>
+    {% endfor %}
+</table>
+{% endblock %}

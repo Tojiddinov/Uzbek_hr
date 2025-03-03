@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2 class="text-secondary">
+            📋 Shortlisted Candidates
+        </h2>
+        <a href="{% url 'employer_dashboard' %}" class="btn btn-outline-primary">
+            🔙 Back to Employer Dashboard
+        </a>
+    </div>
+
+    {% if jobs %}
+        {% for job, applications in jobs.items %}
+            <div class="card shadow-sm mb-4 border-0">
+                <div class="card-header text-white fw-bold" style="background: #4c8bf5;">
+                    <h4 class="mb-0">{{ job }}</h4>
+                </div>
+                <div class="card-body">
+                    <table class="table table-bordered table-hover align-middle">
+                        <thead class="table-light">
+                            <tr class="text-center">
+                                <th>#</th>
+                                <th>👤 First Name</th>
+                                <th>👥 Last Name</th>
+                                <th>📧 Email</th>
+                                <th>✅ Status</th>
+                                <th>📝 Test Answers</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for application in applications %}
+                            <tr>
+                                <td class="text-center">{{ forloop.counter }}</td>
+                                <td>{{ application.applicant.first_name }}</td>
+                                <td>{{ application.applicant.last_name }}</td>
+                                <td>
+                                    <a href="mailto:{{ application.applicant.email }}" class="text-decoration-none text-primary">
+                                        {{ application.applicant.email }}
+                                    </a>
+                                </td>
+                                <td class="text-center">
+                                    <span class="badge bg-success">Shortlisted</span>
+                                </td>
+                                <td class="text-center">
+                                    {% if application.test_answers %}
+                                        <a href="{% url 'view_test_answers' application.id %}" class="btn btn-sm btn-outline-info">
+                                            View Answers
+                                        </a>
+                                    {% else %}
+                                        <span class="text-muted">Not Available</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        {% endfor %}
+    {% else %}
+        <div class="alert alert-warning text-center">
+            <h5>❌ No shortlisted candidates available.</h5>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}
